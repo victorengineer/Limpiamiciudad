@@ -7,32 +7,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_title_profile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:text="PROFILE ACTIVITY"
-            />
-
-        <Button
-            android:id="@+id/btn_title_logout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="CERRAR SESION"
-            android:layout_above="@+id/title_profile" />
-    </LinearLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:text="MAP ACTIVITY"
+            />
 
         <View
             android:id="@+id/bottom_divider"

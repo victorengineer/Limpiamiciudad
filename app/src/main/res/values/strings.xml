@@ -49,6 +49,9 @@
     <string name="action_leave_chatroom">Leave chatroom</string>
     <string name="action_chatroom_user_list">User list</string>
     <string name="action_profile">Profile</string>
+    <string name="home">Inicio</string>
+    <string name="map">Mapa</string>
+    <string name="profile">Perfil</string>
 
 
 </resources>

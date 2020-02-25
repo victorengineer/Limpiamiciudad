@@ -8,16 +8,20 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationMenuView;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -49,13 +53,14 @@ import static com.victorengineer.limpiamiciudad.Constants.ERROR_DIALOG_REQUEST;
 
 
 public class MainActivity extends AppCompatActivity implements
-        View.OnClickListener
+        View.OnClickListener, BottomNavigationView.OnNavigationItemSelectedListener
 {
 
     private static final String TAG = "MainActivity";
 
     //widgets
     private ProgressBar mProgressBar;
+    private BottomNavigationView bottomNavigationView;
 
     //vars
     private ArrayList<Chatroom> mChatrooms = new ArrayList<>();
@@ -73,11 +78,25 @@ public class MainActivity extends AppCompatActivity implements
 
         mDb = FirebaseFirestore.getInstance();
 
-        initSupportActionBar();
+        setTitle("Home");
+
+        bottomNavigationView = findViewById(R.id.bottom_nav_home);
+        setBottomNavView();
     }
 
-    private void initSupportActionBar(){
-        setTitle("Home");
+    private void setBottomNavView() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.getMenu().getItem(0).setChecked(true);
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
+        for (int i = 0; i < menuView.getChildCount(); i++) {
+            final View iconView = menuView.getChildAt(i).findViewById(android.support.design.R.id.icon);
+            iconView.setPadding(0,0,0,0);
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0,0,0,0);
+            layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+            iconView.setLayoutParams(layoutParams);
+        }
     }
 
 
@@ -93,9 +112,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mChatroomEventListener != null){
-            mChatroomEventListener.remove();
-        }
     }
 
     @Override
@@ -113,28 +129,20 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        int id = menuItem.getItemId();
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.action_sign_out:{
-                signOut();
-                return true;
-            }
-            case R.id.action_profile:{
-                startActivity(new Intent(this, ProfileActivity.class));
-                return true;
-            }
-            default:{
-                return super.onOptionsItemSelected(item);
-            }
+        if (id == R.id.menu_home) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        } else if (id == R.id.menu_map) {
+            startActivity(new Intent(this, MapActivity.class));
+            finish();
+        } else if (id == R.id.menu_profile) {
+            startActivity(new Intent(this, ProfileActivity.class));
+            finish();
         }
-
+        return false;
     }
 
     private void showDialog(){
