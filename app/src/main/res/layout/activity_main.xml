@@ -7,17 +7,49 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <include
+            layout="@layout/app_bar_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="32dp"
+            android:text="@string/home" />
+
+        <LinearLayout
+            android:id="@+id/fragment_clientes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:text="HOLA PRROS"
-            />
+            android:gravity="center"
+            tools:context="com.example.victorantonio.lavendimia.MainActivity"
+            >
+
+
+            <Button
+                android:id="@+id/btn_report"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/report"
+                android:onClick="onClick"/>
+
+            <Button
+                android:id="@+id/btn_my_complaints"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/my_complaints"
+                android:onClick="onClick"/>
+
+        </LinearLayout >
 
         <View
             android:id="@+id/bottom_divider"

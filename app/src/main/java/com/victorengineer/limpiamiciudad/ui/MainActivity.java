@@ -103,7 +103,16 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-
+            case R.id.btn_report:{
+                Intent intent = new Intent(MainActivity.this, ReportActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.btn_my_complaints:{
+                Intent intent = new Intent(MainActivity.this, MyComplaintsActivity.class);
+                startActivity(intent);
+                break;
+            }
 
         }
     }

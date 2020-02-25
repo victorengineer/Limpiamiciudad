@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_registro_usuarios"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context=".ui.ReportActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="REGISTRO DE CLIENTES"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="30dp"/>
+
+
+    <EditText
+        android:id="@+id/edt_nombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="nombre"/>
+
+    <EditText
+        android:id="@+id/edt_apellido_pat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="apellido paterno"/>
+    <EditText
+        android:id="@+id/edt_apellido_mat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="apellido materno"/>
+    <EditText
+        android:id="@+id/edt_rfc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="rfc"/>
+
+    <Button
+        android:id="@+id/btnRegistro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Registrar Cliente"
+        android:layout_marginTop="30dp"
+        android:onClick="onClick"/>
+
+</LinearLayout>

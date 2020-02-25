@@ -52,6 +52,11 @@
     <string name="home">Inicio</string>
     <string name="map">Mapa</string>
     <string name="profile">Perfil</string>
+    <string name="report">Denunciar</string>
+    <string name="my_complaints">Mis Denuncias</string>
+    <string name="nav_header_title">Victor Lopez</string>
+    <string name="nav_header_subtitle">vick95mex@gmail.com</string>
+    <string name="nav_header_desc">Navigation header</string>
 
 
 </resources>
