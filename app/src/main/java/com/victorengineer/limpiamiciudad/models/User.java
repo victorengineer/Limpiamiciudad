@@ -8,11 +8,14 @@ public class User implements Parcelable{
     private String email;
     private String user_id;
     private String username;
+    private int user_type;
 
-    public User(String email, String user_id, String username) {
+
+    public User(String email, String user_id, String username, int user_type) {
         this.email = email;
         this.user_id = user_id;
         this.username = username;
+        this.user_type = user_type;
     }
 
     public User() {
@@ -23,6 +26,7 @@ public class User implements Parcelable{
         email = in.readString();
         user_id = in.readString();
         username = in.readString();
+        user_type = in.readInt();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -67,12 +71,21 @@ public class User implements Parcelable{
         this.username = username;
     }
 
+    public int getUser_type() {
+        return user_type;
+    }
+
+    public void setUser_type(int user_type) {
+        this.user_type = user_type;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "email='" + email + '\'' +
                 ", user_id='" + user_id + '\'' +
                 ", username='" + username + '\'' +
+                ", user_type='" + user_type + '\'' +
                 '}';
     }
 
@@ -86,6 +99,7 @@ public class User implements Parcelable{
         dest.writeString(email);
         dest.writeString(user_id);
         dest.writeString(username);
+        dest.writeInt(user_type);
     }
 }
 

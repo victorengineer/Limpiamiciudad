@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GoogleMaps2018</string>
+    <string name="app_name">Limpia mi ciudad</string>
 
     <string name="google_maps_api_key">AIzaSyA4z1nMNMtAwP47zWC0Xd7_gt67A3EPCMI</string>
 
@@ -57,6 +57,22 @@
     <string name="nav_header_title">Victor Lopez</string>
     <string name="nav_header_subtitle">vick95mex@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
+    <string name="tipo_residuo_hint">Seleccione un tipo...</string>
+    <string name="volumen_residuo_hint">Seleccione un volumen...</string>
+    <string name="tv_tipo_residuo">Tipo de residuo:</string>
+    <string name="tv_volumen_residuo">Volumen de residuo:</string>
+    <string name="descripcion_hint">Descripcion:</string>
+    <string name="take_picture">Toma una foto:</string>
+    <string name="accept">Aceptar</string>
+    <string name="collection_tipos_residuo">TiposResiduo</string>
+    <string name="collection_volumen_residuo">VolumenResiduo</string>
+    <string name="collection_reports">Reports</string>
+    <string name="report_success">Denuncia enviada.</string>
+    <string name="report_failed">Ocurrio un error, intentelo de nuevo más tarde.</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

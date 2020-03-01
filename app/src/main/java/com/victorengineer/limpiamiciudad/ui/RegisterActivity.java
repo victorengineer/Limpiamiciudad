@@ -78,6 +78,7 @@ public class RegisterActivity extends AppCompatActivity implements
                             User user = new User();
                             user.setEmail(email);
                             user.setUsername(email.substring(0, email.indexOf("@")));
+                            user.setUser_type(1);
                             user.setUser_id(FirebaseAuth.getInstance().getUid());
 
                             FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()

@@ -25,6 +25,7 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.victorengineer.limpiamiciudad.BaseActivity;
 import com.victorengineer.limpiamiciudad.R;
 import com.victorengineer.limpiamiciudad.adapters.ChatroomRecyclerAdapter;
 import com.victorengineer.limpiamiciudad.models.Chatroom;
@@ -52,7 +53,7 @@ import javax.annotation.Nullable;
 import static com.victorengineer.limpiamiciudad.Constants.ERROR_DIALOG_REQUEST;
 
 
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends BaseActivity implements BaseFragment.OnChangeListener,
         View.OnClickListener, BottomNavigationView.OnNavigationItemSelectedListener
 {
 
@@ -63,12 +64,8 @@ public class MainActivity extends AppCompatActivity implements
     private BottomNavigationView bottomNavigationView;
 
     //vars
-    private ArrayList<Chatroom> mChatrooms = new ArrayList<>();
-    private Set<String> mChatroomIds = new HashSet<>();
-    private ChatroomRecyclerAdapter mChatroomRecyclerAdapter;
-    private RecyclerView mChatroomRecyclerView;
-    private ListenerRegistration mChatroomEventListener;
     private FirebaseFirestore mDb;
+    private ReportFragment reportFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +75,18 @@ public class MainActivity extends AppCompatActivity implements
 
         mDb = FirebaseFirestore.getInstance();
 
-        setTitle("Home");
+        setTitle("Reportar");
+
+
+        reportFragment = ReportFragment.newInstance(this);
+        addOrReplaceFragment(reportFragment, R.id.fragment_container);
+
+
 
         bottomNavigationView = findViewById(R.id.bottom_nav_home);
         setBottomNavView();
+
+        //startActivity(new Intent(this, ReportActivity.class));
     }
 
     private void setBottomNavView() {
@@ -103,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            /*
             case R.id.btn_report:{
                 Intent intent = new Intent(MainActivity.this, ReportActivity.class);
                 startActivity(intent);
@@ -113,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements
                 startActivity(intent);
                 break;
             }
+            */
 
         }
     }
@@ -126,15 +133,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-    }
-
-
-    private void signOut(){
-        FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
     }
 
     @Override
@@ -162,5 +160,26 @@ public class MainActivity extends AppCompatActivity implements
         mProgressBar.setVisibility(View.GONE);
     }
 
+    @Override
+    protected void onStart(){
+        super.onStart();
 
+    }
+
+
+
+    @Override
+    public void onDataChanged() {
+
+    }
+
+    @Override
+    public void onFragmentAttached() {
+
+    }
+
+    @Override
+    public void onStartNewActivity(String stringActivity) {
+
+    }
 }

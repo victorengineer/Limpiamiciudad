@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        android:layout_marginHorizontal="16dp">
+
+        <TextView
+            android:id="@+id/tv_tipo_residuo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/tv_tipo_residuo"
+            android:textColor="@color/txt_edit_light_gray"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            android:textStyle="normal"
+            android:letterSpacing="0.01"
+            android:lineSpacingExtra="8sp" />
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/tipo_residuo_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_rounded_input_field"
+            android:paddingBottom="5dp"
+            android:layout_marginBottom="20dp"
+            android:paddingTop="10dp"
+            android:layout_below="@id/tv_tipo_residuo">
+
+            <Spinner
+                android:id="@+id/tipo_residuo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/tipo_residuo_hint"
+                android:imeOptions="actionNext"
+                android:inputType="textPersonName|textCapWords"
+                android:lines="1"
+                android:maxLength="50"
+                android:nextFocusForward="@id/volumen_residuo"
+                android:paddingLeft="15dp"
+                android:singleLine="true"
+                android:textAllCaps="true"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:textColor="@color/txt_edit_light_gray"
+                android:letterSpacing="0.01"
+                android:lineSpacingExtra="8sp"
+                android:textColorHint="@color/hint_color" />
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_volumen_residuo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/tv_volumen_residuo"
+            android:textColor="@color/txt_edit_light_gray"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            android:textStyle="normal"
+            android:letterSpacing="0.01"
+            android:lineSpacingExtra="8sp"
+            android:layout_below="@id/tipo_residuo_container"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/volumen_residuo_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_rounded_input_field"
+            android:paddingBottom="5dp"
+            android:layout_marginBottom="20dp"
+            android:paddingTop="10dp"
+            android:layout_below="@+id/tv_volumen_residuo">
+
+            <Spinner
+                android:id="@+id/volumen_residuo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/volumen_residuo_hint"
+                android:imeOptions="actionNext"
+                android:inputType="textPersonName|textCapWords"
+                android:lines="1"
+                android:maxLength="50"
+                android:nextFocusForward="@id/descripcion"
+                android:paddingLeft="15dp"
+                android:singleLine="true"
+                android:textAllCaps="true"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:textColor="@color/txt_edit_light_gray"
+                android:letterSpacing="0.01"
+                android:lineSpacingExtra="8sp"
+                android:textColorHint="@color/hint_color" />
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:id="@+id/descripcion_container"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/volumen_residuo_container">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/descripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="aábcdeéfghiíjklmnñoópqrstuúüvwxyzAÁBCDEÉFGHIÍJKLMNÑOÓPQRSTUÚÜVWXYZ "
+                android:hint="@string/descripcion_hint"
+                android:textColor="@color/txt_edit_light_gray"
+                android:imeOptions="actionNext"
+                android:inputType="textPersonName|textNoSuggestions|textCapWords"
+                android:maxLength="50"
+                android:textSize="16sp"
+                android:ems="10"
+                android:singleLine="true"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:letterSpacing="0.01"
+                android:lineSpacingExtra="8sp" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_take_picture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/descripcion_container"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/take_picture"
+            android:textColor="@color/txt_edit_light_gray"
+            android:fontFamily="sans-serif-medium"
+            android:textStyle="normal"
+            android:letterSpacing="0.01"
+            android:lineSpacingExtra="8sp"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/ll_take_picture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="5dp"
+            android:layout_below="@+id/tv_take_picture">
+
+            <Button
+                android:id="@+id/btnSelectPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:background="@drawable/bg_button_enabled"
+                android:text="Selecciona una foto" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_below="@id/ll_take_picture">
+
+            <ImageView
+                android:id="@+id/ivImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher" />
+        </LinearLayout>
+
+
+
+        <Button
+            android:id="@+id/btn_beneficiario_accept"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_photo"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/bg_button_disabled"
+            android:text="@string/report"
+            android:textAllCaps="true"
+            android:enabled="false"
+            android:textColor="@color/white"
+            android:layout_marginBottom="40dp"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+</RelativeLayout>

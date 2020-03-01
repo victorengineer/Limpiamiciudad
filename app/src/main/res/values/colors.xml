@@ -16,6 +16,7 @@
     <color name="blue4">#00aab1</color>
     <color name="blue5">#007f85</color>
     <color name="White">#fff</color>
+    <color name="white">#fff</color>
     <color name="darkGrey">#a6a6a6 </color>
     <color name="Grey">#c3c3c3 </color>
     <color name="lightGrey">#f2f2f2 </color>
@@ -24,5 +25,12 @@
     <color name="Black">#000 </color>
     <color name="product_name_color">#4d4d4d</color>
     <color name="background">#F5F5F5</color>
+    <color name="txt_edit_light_gray">#858585</color>
+    <color name="hint_color">#939393</color>
+    <color name="iris">#455cc7</color>
+    <color name="button_disabled">#afb5c1</color>
+
+
+
 
 </resources>
