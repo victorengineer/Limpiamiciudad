@@ -1,93 +1,103 @@
 package com.victorengineer.limpiamiciudad.ui;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
-import android.util.Log;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.victorengineer.limpiamiciudad.BaseActivity;
 import com.victorengineer.limpiamiciudad.R;
-import com.victorengineer.limpiamiciudad.adapters.ChatroomRecyclerAdapter;
-import com.victorengineer.limpiamiciudad.models.Chatroom;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
-import static com.victorengineer.limpiamiciudad.Constants.ERROR_DIALOG_REQUEST;
+import com.victorengineer.limpiamiciudad.models.Report;
+import com.victorengineer.limpiamiciudad.models.User;
+import com.victorengineer.limpiamiciudad.util.SessionHandler;
 
 
 public class MainActivity extends BaseActivity implements BaseFragment.OnChangeListener,
-        View.OnClickListener, BottomNavigationView.OnNavigationItemSelectedListener
+        View.OnClickListener, BottomNavigationView.OnNavigationItemSelectedListener,
+        ComplaintsListFragment.ReportListener
 {
 
-    private static final String TAG = "MainActivity";
+    public static final String TAG = "MainActivity";
 
     //widgets
-    private ProgressBar mProgressBar;
     private BottomNavigationView bottomNavigationView;
+    private Toolbar toolbar;
 
     //vars
     private FirebaseFirestore mDb;
     private ReportFragment reportFragment;
+    private ComplaintsListFragment complaintsListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mProgressBar = findViewById(R.id.progressBar);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
 
         mDb = FirebaseFirestore.getInstance();
-
-        setTitle("Reportar");
-
-
-        reportFragment = ReportFragment.newInstance(this);
-        addOrReplaceFragment(reportFragment, R.id.fragment_container);
+        init();
 
 
+    }
 
+    private void init(){
         bottomNavigationView = findViewById(R.id.bottom_nav_home);
         setBottomNavView();
 
-        //startActivity(new Intent(this, ReportActivity.class));
+        String idUser = SessionHandler.getIdUser(getApplicationContext());
+        DocumentReference userRef = mDb.collection(getString(R.string.collection_users))
+                .document(idUser);
+
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    User user = task.getResult().toObject(User.class);
+                    if(user.getUser_type() == 1) {
+                        setToolbarTitle(getString(R.string.report));
+                        setBoldActionBartitle();
+                        reportFragment = ReportFragment.newInstance(getApplicationContext());
+                        addOrReplaceFragment(reportFragment, R.id.fragment_container);
+                    }else {
+                        setToolbarTitle(getString(R.string.report_list));
+                        setBoldActionBartitle();
+                        inflateFragmentComplaints();
+                    }
+
+                }
+            }
+        });
     }
+
+    private void setToolbarTitle(String title) {
+        try {
+            setTitle(title);
+            toolbar.setTitle(title);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void inflateFragmentComplaints(){
+        complaintsListFragment = ComplaintsListFragment.newInstance(this);
+        addOrReplaceFragment(complaintsListFragment, R.id.fragment_container);
+    }
+
 
     private void setBottomNavView() {
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -152,13 +162,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnChangeL
         return false;
     }
 
-    private void showDialog(){
-        mProgressBar.setVisibility(View.VISIBLE);
-    }
-
-    private void hideDialog(){
-        mProgressBar.setVisibility(View.GONE);
-    }
 
     @Override
     protected void onStart(){
@@ -181,5 +184,17 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnChangeL
     @Override
     public void onStartNewActivity(String stringActivity) {
 
+    }
+
+    @Override
+    public void onReportSelected(Report report) {
+        Intent myIntent = new Intent(getApplicationContext(), ReportDetailActivity.class);
+        myIntent.putExtra("reportId", report.getReportId());
+        myIntent.putExtra("tipoResiduo", report.getTipoResiduo());
+        myIntent.putExtra("volumenResiduo", report.getVolumenResiduo());
+        myIntent.putExtra("descripcionResiduo", report.getDescripcionResiduo());
+        myIntent.putExtra("fechaReportada", report.getTimestamp());
+        myIntent.putExtra("imgUri", report.getImgUri());
+        startActivity(myIntent);
     }
 }

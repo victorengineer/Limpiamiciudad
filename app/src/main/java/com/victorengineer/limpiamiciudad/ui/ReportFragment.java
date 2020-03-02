@@ -301,33 +301,6 @@ public class ReportFragment extends BaseFragment implements View.OnClickListener
         }
     }
 
-    private void startLocationService(){
-        if(!isLocationServiceRunning()){
-            Intent serviceIntent = new Intent(getActivity(), LocationService.class);
-//        this.startService(serviceIntent);
-
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
-
-                getActivity().startForegroundService(serviceIntent);
-            }else{
-                getActivity().startService(serviceIntent);
-            }
-        }
-    }
-
-    private boolean isLocationServiceRunning() {
-        ActivityManager manager = (ActivityManager) getActivity().getSystemService(context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-            if("com.victorengineer.limpiamiciudad.util.LocationService".equals(service.service.getClassName())) {
-                Log.d(TAG, "isLocationServiceRunning: location service is already running.");
-                return true;
-            }
-        }
-        Log.d(TAG, "isLocationServiceRunning: location service is not running.");
-        return false;
-    }
-
-
     private InputFilter[] getFilters(int maxLength){
         InputFilter[] fArray = new InputFilter[2];
         fArray[0] = new InputFilter.AllCaps();
@@ -476,7 +449,9 @@ public class ReportFragment extends BaseFragment implements View.OnClickListener
 
         Log.d("upload", "upload image outside");
 
-        StorageReference ref= storageReference.child("images/"+ UUID.randomUUID().toString());
+        final String namePhoto = UUID.randomUUID().toString();
+
+        StorageReference ref= storageReference.child("images/"+ namePhoto);
         ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -497,7 +472,8 @@ public class ReportFragment extends BaseFragment implements View.OnClickListener
                 newReport.setVolumenResiduo(volumenResiduo);
                 newReport.setDescripcionResiduo(description);
                 newReport.setGeo_point(mUserLocation.getGeo_point());
-                newReport.setImgUri(taskSnapshot.getUploadSessionUri().toString());
+                newReport.setImgUri(namePhoto);
+                newReport.setReporteAceptado(false);
                 newReport.setReportId(newReportRef.getId());
 
 
@@ -632,9 +608,9 @@ public class ReportFragment extends BaseFragment implements View.OnClickListener
         switch (requestCode) {
             case Helpers.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if(userChoosenTask.equals("Take Photo"))
+                    if(userChoosenTask.equals("Tomar una foto"))
                         cameraIntent();
-                    else if(userChoosenTask.equals("Choose from Library"))
+                    else if(userChoosenTask.equals("Elegir una foto de galeria"))
                         galleryIntent();
                 } else {
                     //code for deny
@@ -644,8 +620,8 @@ public class ReportFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void selectImage() {
-        final CharSequence[] items = { "Take Photo", "Choose from Library",
-                "Cancel" };
+        final CharSequence[] items = { "Tomar una foto", "Elegir una foto de galeria",
+                "Cancelar" };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Add Photo!");
@@ -654,17 +630,17 @@ public class ReportFragment extends BaseFragment implements View.OnClickListener
             public void onClick(DialogInterface dialog, int item) {
                 boolean result=Helpers.checkPermission(getContext());
 
-                if (items[item].equals("Take Photo")) {
-                    userChoosenTask ="Take Photo";
+                if (items[item].equals("Tomar una foto")) {
+                    userChoosenTask ="Tomar una foto";
                     if(result)
                         cameraIntent();
 
-                } else if (items[item].equals("Choose from Library")) {
-                    userChoosenTask ="Choose from Library";
+                } else if (items[item].equals("Elegir una foto de galeria")) {
+                    userChoosenTask ="Elegir una foto de galeria";
                     if(result)
                         galleryIntent();
 
-                } else if (items[item].equals("Cancel")) {
+                } else if (items[item].equals("Cancelar")) {
                     dialog.dismiss();
                 }
             }
@@ -677,7 +653,7 @@ public class ReportFragment extends BaseFragment implements View.OnClickListener
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);//
-        startActivityForResult(Intent.createChooser(intent, "Select File"),SELECT_FILE);
+        startActivityForResult(Intent.createChooser(intent, "Selecciona una foto"),SELECT_FILE);
     }
 
     private void cameraIntent()

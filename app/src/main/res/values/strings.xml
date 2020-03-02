@@ -53,6 +53,7 @@
     <string name="map">Mapa</string>
     <string name="profile">Perfil</string>
     <string name="report">Denunciar</string>
+    <string name="report_list">Denuncias</string>
     <string name="my_complaints">Mis Denuncias</string>
     <string name="nav_header_title">Victor Lopez</string>
     <string name="nav_header_subtitle">vick95mex@gmail.com</string>
@@ -69,10 +70,23 @@
     <string name="collection_reports">Reports</string>
     <string name="report_success">Denuncia enviada.</string>
     <string name="report_failed">Ocurrio un error, intentelo de nuevo más tarde.</string>
-
+    <string name="report_detail">Detalle de denuncia</string>
+    <string name="report_date">Fecha reportada:</string>
+    <string name="dialog_loading">Cargando&#8230;</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="report_aprove">¿Estás seguro que deseas aprobar la denuncia?</string>
+    <string name="report_rejected">¿Estás seguro que deseas rechazar la denuncia?</string>
+    <string name="report_aprove_success">La denuncia ha sido aprobada con éxito</string>
+    <string name="report_rejected_success">La denuncia ha sido rechazada con éxito</string>
+    <string name="report_aproving">Aprobando denuncia…</string>
+    <string name="report_rejecting">Rechazando denuncia…</string>
+    <string name="report_aprove_failed">No se ha podido procesar la solicitud, intente de nuevo más tarde.</string>
+    <string name="aceptar_uppercase">ACEPTAR</string>
+    <string name="cancelar_uppercase">CANCELAR</string>
+    <string name="connection_error">Error de conexión, por favor intente de nuevo.</string>
+    <string name="entendido">ENTENDIDO</string>
 
 </resources>

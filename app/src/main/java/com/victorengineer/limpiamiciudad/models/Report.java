@@ -21,6 +21,8 @@ public class Report {
 
     private String imgUri;
 
+    private boolean reporteAceptado;
+
     public GeoPoint getGeo_point() {
         return geo_point;
     }
@@ -36,6 +38,15 @@ public class Report {
         this.descripcionResiduo = descripcionResiduo;
         this.geo_point = geo_point;
         this.imgUri = imgUri;
+        this.timestamp = timestamp;
+    }
+
+    public Report(String reportId, String tipoResiduo, String volumenResiduo, String descripcionResiduo, GeoPoint geo_point, Date timestamp) {
+        this.reportId = reportId;
+        this.tipoResiduo = tipoResiduo;
+        this.volumenResiduo = volumenResiduo;
+        this.descripcionResiduo = descripcionResiduo;
+        this.geo_point = geo_point;
         this.timestamp = timestamp;
     }
 
@@ -90,5 +101,13 @@ public class Report {
 
     public void setImgUri(String imgUri) {
         this.imgUri = imgUri;
+    }
+
+    public boolean isReporteAceptado() {
+        return reporteAceptado;
+    }
+
+    public void setReporteAceptado(boolean reporteAceptado) {
+        this.reporteAceptado = reporteAceptado;
     }
 }

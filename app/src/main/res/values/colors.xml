@@ -29,8 +29,9 @@
     <color name="hint_color">#939393</color>
     <color name="iris">#455cc7</color>
     <color name="button_disabled">#afb5c1</color>
-
-
+    <color name="azul_fuerte">#344075</color>
+    <color name="verde_oscuro">#2600ac68</color>
+    <color name="secondaryText">#727272</color>
 
 
 </resources>
