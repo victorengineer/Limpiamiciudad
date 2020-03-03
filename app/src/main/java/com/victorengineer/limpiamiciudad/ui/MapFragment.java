@@ -71,7 +71,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.victorengineer.limpiamiciudad.Constants.MAPVIEW_BUNDLE_KEY;
 
 
 public class MapFragment extends Fragment implements
@@ -87,7 +86,6 @@ public class MapFragment extends Fragment implements
     //widgets
     private RelativeLayout mMapContainer;
     private ImageButton btnResetMap;
-    private MapView mMapView;
 
     //vars
     private ArrayList<Report> mReportList = new ArrayList<>();
@@ -119,14 +117,6 @@ public class MapFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         mDb = FirebaseFirestore.getInstance();
 
-
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_map, container, false);
-        mMapView = (MapView) view.findViewById(R.id.map);
         initGoogleMap();
 
 
@@ -157,13 +147,24 @@ public class MapFragment extends Fragment implements
             }
 
         });
-        mMapContainer = view.findViewById(R.id.map_container);
-        btnResetMap = view.findViewById(R.id.btn_reset_map);
-        btnResetMap.setOnClickListener(this);
 
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_map, container, false);
+        //mMapContainer = view.findViewById(R.id.map_container);mMapContainer = view.findViewById(R.id.map_container);
+        //btnResetMap = view.findViewById(R.id.btn_reset_map);
+        //btnResetMap.setOnClickListener(this);
+
+
+        initGoogleMap();
 
         return view;
     }
+
+
+
 
     private void getUserLocation(final MapFragment.UserLocationCallback userLocationCallback){
 
@@ -234,14 +235,14 @@ public class MapFragment extends Fragment implements
         // *** IMPORTANT ***
         // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
         // objects or sub-Bundles.
-        if (mMapView != null) {
-            // Initialise the MapView
-            mMapView.onCreate(null);
-            mMapView.onResume();
-            // Set the map ready callback to receive the GoogleMap object
-            mMapView.getMapAsync(this);
 
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map_fragment);
+
+        if(mapFragment != null){
+            mapFragment.getMapAsync(this);
         }
+
 
         if(mGeoApiContext == null){
             mGeoApiContext = new GeoApiContext.Builder()
@@ -360,7 +361,7 @@ public class MapFragment extends Fragment implements
                 new LatLng(topBoundary, rightBoundary)
         );
 
-        //mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(mMapBoundary, 30));
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(mMapBoundary, 30));
 
         /*
         moveCamara(new MapActivity.MoveCamaraCallback() {
@@ -576,27 +577,15 @@ public class MapFragment extends Fragment implements
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-
+            /*
             case R.id.btn_reset_map:{
                 addMapMarkers();
                 break;
             }
+            */
         }
     }
 
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        Bundle mapViewBundle = outState.getBundle(MAPVIEW_BUNDLE_KEY);
-        if (mapViewBundle == null) {
-            mapViewBundle = new Bundle();
-            outState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle);
-        }
-
-        mMapView.onSaveInstanceState(mapViewBundle);
-    }
 
     private interface ReportListCallback {
         void onReportListCallback(List<Report> reportList);
@@ -613,37 +602,31 @@ public class MapFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        mMapView.onResume();
     }
 
     @Override
     public void onStart() {
-        mMapView.onStop();
         super.onStart();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mMapView.onStop();
     }
 
     @Override
     public void onPause() {
-        mMapView.onPause();
         super.onPause();
     }
 
     @Override
     public void onDestroy() {
-        mMapView.onDestroy();
         super.onDestroy();
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mMapView.onLowMemory();
     }
 
 }

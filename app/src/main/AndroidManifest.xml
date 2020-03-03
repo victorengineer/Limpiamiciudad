@@ -14,7 +14,7 @@
         android:required="true"/>
 
     <permission
-        android:name="com.example.permission.MAPS_RECEIVE"
+        android:name="com.victorengineer.limpiamiciudad.permission.MAPS_RECEIVE"
         android:protectionLevel="signature"/>
 
     <application

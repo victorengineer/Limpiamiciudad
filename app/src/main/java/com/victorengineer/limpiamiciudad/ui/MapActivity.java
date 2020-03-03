@@ -35,7 +35,7 @@ public class MapActivity extends BaseActivity implements  BottomNavigationView.O
         bottomNavigationView = findViewById(R.id.bottom_nav_home);
         setBottomNavView();
 
-        mapFragment = MapFragment.newInstance();
+        MapFragment mapFragment = MapFragment.newInstance();
         addOrReplaceFragment(mapFragment, R.id.fragment_map_container);
 
 
@@ -43,7 +43,7 @@ public class MapActivity extends BaseActivity implements  BottomNavigationView.O
 
     private void setBottomNavView() {
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.getMenu().getItem(2).setChecked(true);
+        bottomNavigationView.getMenu().getItem(1).setChecked(true);
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
         for (int i = 0; i < menuView.getChildCount(); i++) {
             final View iconView = menuView.getChildAt(i).findViewById(android.support.design.R.id.icon);

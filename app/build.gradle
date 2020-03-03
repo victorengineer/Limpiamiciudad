@@ -45,8 +45,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:17.0.4'
     // Firebase storage
     implementation 'com.google.firebase:firebase-storage:16.0.1'
-    //Images
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
 
     implementation 'com.firebaseui:firebase-ui-storage:3.0.0'
 
@@ -63,5 +61,13 @@ dependencies {
 
     // Circle ImageView
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+
+    // Maps utils (required for custom markers)
+    implementation 'com.google.maps.android:android-maps-utils:0.5+'
+
+    // Google Maps Services (needed for directions)
+    implementation 'com.google.maps:google-maps-services:0.2.9'
+    implementation 'org.slf4j:slf4j-nop:1.7.25'
+
 }
 apply plugin: 'com.google.gms.google-services'
