@@ -121,8 +121,10 @@ public class RejectReportDialog extends CustomAlertDialog{
                 .setPositiveButton(getString(R.string.entendido), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (getResultListener() != null) {
+                            getResultListener().onResult(result, null);
+                        }
                         dismiss();
-                        getActivity().finish();
 
                     }
                 });

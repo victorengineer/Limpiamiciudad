@@ -1,22 +1,29 @@
 package com.victorengineer.limpiamiciudad.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
+import com.victorengineer.limpiamiciudad.BaseActivity;
 import com.victorengineer.limpiamiciudad.R;
+import com.victorengineer.limpiamiciudad.models.Report;
+import com.victorengineer.limpiamiciudad.models.Result;
+import com.victorengineer.limpiamiciudad.util.ResultListener;
 
-public class MapActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+import java.util.Date;
 
-    private static final String TAG = "MapActivity";
+public class MapActivity extends BaseActivity implements  BottomNavigationView.OnNavigationItemSelectedListener{
 
+    private MapFragment mapFragment;
     private BottomNavigationView bottomNavigationView;
 
 
@@ -24,16 +31,19 @@ public class MapActivity extends AppCompatActivity implements BottomNavigationVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
         bottomNavigationView = findViewById(R.id.bottom_nav_home);
         setBottomNavView();
+
+        mapFragment = MapFragment.newInstance();
+        addOrReplaceFragment(mapFragment, R.id.fragment_map_container);
+
+
     }
 
     private void setBottomNavView() {
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.getMenu().getItem(1).setChecked(true);
+        bottomNavigationView.getMenu().getItem(2).setChecked(true);
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
         for (int i = 0; i < menuView.getChildCount(); i++) {
             final View iconView = menuView.getChildAt(i).findViewById(android.support.design.R.id.icon);
@@ -45,7 +55,6 @@ public class MapActivity extends AppCompatActivity implements BottomNavigationVi
             iconView.setLayoutParams(layoutParams);
         }
     }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -63,5 +72,20 @@ public class MapActivity extends AppCompatActivity implements BottomNavigationVi
         }
         return false;
     }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        onBackPressed();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+
 
 }

@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.victorengineer.limpiamiciudad.util.SessionHandler;
 
 import static android.text.TextUtils.isEmpty;
 import static com.victorengineer.limpiamiciudad.util.Check.doStringsMatch;
@@ -80,6 +81,8 @@ public class RegisterActivity extends AppCompatActivity implements
                             user.setUsername(email.substring(0, email.indexOf("@")));
                             user.setUser_type(1);
                             user.setUser_id(FirebaseAuth.getInstance().getUid());
+
+                            SessionHandler.putIdser(FirebaseAuth.getInstance().getUid(), getApplicationContext());
 
                             FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                                     .setTimestampsInSnapshotsEnabled(true)
