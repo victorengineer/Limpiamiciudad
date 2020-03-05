@@ -187,7 +187,7 @@
                     android:textColor="#e03d51"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"
-                    android:text="RECHAZAR PRÉSTAMO"
+                    android:text="@string/btn_report_reject"
                     />
 
             </LinearLayout>

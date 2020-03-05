@@ -61,7 +61,7 @@
             android:layout_alignParentBottom="true"
             android:gravity="center"
             android:background="@color/iris"
-            android:text="APROBAR PRÉSTAMO"
+            android:text="@string/btn_report_aprove"
 
             />
     </RelativeLayout>

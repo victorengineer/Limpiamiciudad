@@ -1,13 +1,19 @@
 package com.victorengineer.limpiamiciudad.ui;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -25,12 +31,19 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -75,7 +88,6 @@ import java.util.List;
 
 public class MapFragment extends Fragment implements
         OnMapReadyCallback,
-        View.OnClickListener,
         GoogleMap.OnInfoWindowClickListener,
         GoogleMap.OnPolylineClickListener{
 
@@ -84,8 +96,6 @@ public class MapFragment extends Fragment implements
     private static final int LOCATION_UPDATE_INTERVAL = 3000;
 
     //widgets
-    private RelativeLayout mMapContainer;
-    private ImageButton btnResetMap;
 
     //vars
     private ArrayList<Report> mReportList = new ArrayList<>();
@@ -107,6 +117,10 @@ public class MapFragment extends Fragment implements
     private Runnable mRunnable;
     private FirebaseFirestore mDb;
     private UserLocation mUserLocation;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private LocationRequest mLocationRequest;
+    private Location mLastLocation;
+    private Marker mCurrLocationMarker;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -116,6 +130,8 @@ public class MapFragment extends Fragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDb = FirebaseFirestore.getInstance();
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         initGoogleMap();
 
@@ -153,9 +169,7 @@ public class MapFragment extends Fragment implements
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        //mMapContainer = view.findViewById(R.id.map_container);mMapContainer = view.findViewById(R.id.map_container);
-        //btnResetMap = view.findViewById(R.id.btn_reset_map);
-        //btnResetMap.setOnClickListener(this);
+
 
 
         initGoogleMap();
@@ -265,7 +279,127 @@ public class MapFragment extends Fragment implements
 //        setCameraView();
 
         mGoogleMap = map;
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(120000); // two minute interval
+        mLocationRequest.setFastestInterval(120000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                //Location Permission already granted
+                mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+                mGoogleMap.setMyLocationEnabled(true);
+            } else {
+                //Request Location Permission
+                checkLocationPermission();
+            }
+        }
+        else {
+            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+            mGoogleMap.setMyLocationEnabled(true);
+        }
+
         mGoogleMap.setOnPolylineClickListener(this);
+    }
+
+    LocationCallback mLocationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            List<Location> locationList = locationResult.getLocations();
+            if (locationList.size() > 0) {
+                //The last location in the list is the newest
+                Location location = locationList.get(locationList.size() - 1);
+                Log.i("MapsActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
+                mLastLocation = location;
+                if (mCurrLocationMarker != null) {
+                    mCurrLocationMarker.remove();
+                }
+
+                //Place current location marker
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.title("Current Position");
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                mCurrLocationMarker = mGoogleMap.addMarker(markerOptions);
+
+                //move map camera
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11));
+            }
+        }
+    };
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private void checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Location Permission Needed")
+                        .setMessage("This app needs the Location permission, please accept to use location functionality")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //Prompt the user once explanation has been shown
+                                ActivityCompat.requestPermissions(getActivity(),
+                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                        MY_PERMISSIONS_REQUEST_LOCATION );
+                            }
+                        })
+                        .create()
+                        .show();
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION );
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(getActivity(),
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+                        mGoogleMap.setMyLocationEnabled(true);
+                    }
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(getActivity(), "permission denied", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
     private void addMapMarkers(){
@@ -292,6 +426,7 @@ public class MapFragment extends Fragment implements
             String idUser = SessionHandler.getIdUser(getActivity());
             if(mUserLocation.getUser().getUser_id().equals(idUser)){
                 snippet = "This is you";
+                //mGeoPointList.add(mUserLocation.getGeo_point());
             }
 
             for(GeoPoint geoPoint: mGeoPointList){
@@ -363,28 +498,7 @@ public class MapFragment extends Fragment implements
 
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(mMapBoundary, 30));
 
-        /*
-        moveCamara(new MapActivity.MoveCamaraCallback() {
-            @Override
-            public void onMoveCamaraCallback() {
 
-            }
-
-        });
-
-         */
-
-    }
-
-    private void moveCamara(final MapFragment.MoveCamaraCallback moveCamaraCallback){
-
-        mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-            @Override
-            public void onMapLoaded() {
-                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(mMapBoundary, 30));
-                moveCamaraCallback.onMoveCamaraCallback();
-            }
-        });
     }
 
     private void setReportsPositions() {
@@ -397,30 +511,63 @@ public class MapFragment extends Fragment implements
 
     @Override
     public void onInfoWindowClick(final Marker marker) {
-        if(marker.getSnippet().equals("This is you")){
-            marker.hideInfoWindow();
-        }
-        else{
-
+        if(marker.getTitle().contains("Trip #")){
             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage(marker.getSnippet())
+            builder.setMessage("¿Quieres abrir google maps?")
                     .setCancelable(true)
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
                         public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                            resetSelectedMarker();
-                            mSelectedMarker = marker;
-                            calculateDirections(marker);
-                            dialog.dismiss();
+                            String latitude = String.valueOf(marker.getPosition().latitude);
+                            String longitude = String.valueOf(marker.getPosition().longitude);
+                            Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude + "," + longitude);
+                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                            mapIntent.setPackage("com.google.android.apps.maps");
+
+                            try {
+                                if(mapIntent.resolveActivity(getActivity().getPackageManager()) != null){
+                                    startActivity(mapIntent);
+                                }
+                            }catch (NullPointerException e){
+                                Log.e(TAG, "onClick: NullPointerException couldn't open map." + e.getMessage());
+                                Toast.makeText(getActivity(), "Couldn't open map", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                            dialog.cancel();
-                        }
-                    });
-            final AlertDialog alert = builder.create();
-            alert.show();
+                    }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            final  AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }else{
+            if(marker.getSnippet().equals("This is you")){
+                marker.hideInfoWindow();
+            }
+            else{
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(marker.getSnippet())
+                        .setCancelable(true)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                                resetSelectedMarker();
+                                mSelectedMarker = marker;
+                                calculateDirections(marker);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                                dialog.cancel();
+                            }
+                        });
+                final AlertDialog alert = builder.create();
+                alert.show();
+            }
         }
+
     }
 
     private void calculateDirections(Marker marker){
@@ -571,18 +718,6 @@ public class MapFragment extends Fragment implements
                 polylineData.getPolyline().setColor(ContextCompat.getColor(getActivity(), R.color.darkGrey));
                 polylineData.getPolyline().setZIndex(0);
             }
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            /*
-            case R.id.btn_reset_map:{
-                addMapMarkers();
-                break;
-            }
-            */
         }
     }
 

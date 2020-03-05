@@ -49,7 +49,7 @@ import static com.victorengineer.limpiamiciudad.Constants.PERMISSIONS_REQUEST_EN
 
 
 public class MainActivity extends BaseActivity implements BaseFragment.OnChangeListener,
-        View.OnClickListener, BottomNavigationView.OnNavigationItemSelectedListener,
+        BottomNavigationView.OnNavigationItemSelectedListener,
         ComplaintsListFragment.ReportListener
 {
 
@@ -63,7 +63,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnChangeL
     private FirebaseFirestore mDb;
     private ReportFragment reportFragment;
     private ComplaintsListFragment complaintsListFragment;
-    private boolean mLocationPermissionGranted = false;
     private FusedLocationProviderClient mFusedLocationClient;
     private UserLocation mUserLocation;
     private User user;
@@ -191,6 +190,9 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnChangeL
                         Log.d(TAG, "saveUserLocation: \ninserted user location into database." +
                                 "\n latitude: " + mUserLocation.getGeo_point().getLatitude() +
                                 "\n longitude: " + mUserLocation.getGeo_point().getLongitude());
+
+                        startActivity(new Intent(getApplicationContext(), MapActivity.class));
+                        finish();
                     }
                 }
             });
@@ -212,15 +214,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnChangeL
             iconView.setLayoutParams(layoutParams);
         }
     }
-
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-
-        }
-    }
-
 
     @Override
     protected void onDestroy() {
@@ -285,13 +278,11 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnChangeL
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-        mLocationPermissionGranted = false;
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mLocationPermissionGranted = true;
                 }
             }
         }
@@ -303,12 +294,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnChangeL
         Log.d(TAG, "onActivityResult: called.");
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ENABLE_GPS: {
-                if(mLocationPermissionGranted){
-                    getUserLocation();
-                }
-                else{
-                    getLocationPermission();
-                }
+
+                getLocationPermission();
             }
         }
 
@@ -319,7 +306,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnChangeL
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            mLocationPermissionGranted = true;
             getUserLocation();
         } else {
             ActivityCompat.requestPermissions(this,
@@ -337,13 +323,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnChangeL
             finish();
         } else if (id == R.id.menu_map) {
             if(checkMapServices()){
-                if(mLocationPermissionGranted){
-                    startActivity(new Intent(this, MapActivity.class));
-                    finish();
-                }
-                else{
-                    getLocationPermission();
-                }
+                getLocationPermission();
             }
 
 

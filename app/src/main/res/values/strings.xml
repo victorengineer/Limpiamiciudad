@@ -87,5 +87,7 @@
     <string name="cancelar_uppercase">CANCELAR</string>
     <string name="connection_error">Error de conexión, por favor intente de nuevo.</string>
     <string name="entendido">ENTENDIDO</string>
+    <string name="btn_report_reject">RECHAZAR DENUNCIA</string>
+    <string name="btn_report_aprove">APROBAR DENUNCIA</string>
 
 </resources>
