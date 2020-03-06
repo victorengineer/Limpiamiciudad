@@ -7,24 +7,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cv_toolbar"
+    <RelativeLayout
+        android:id="@+id/rl_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardElevation="5dp"
-        app:cardCornerRadius="0dp">
-        <android.support.v7.widget.Toolbar
+        android:layout_height="56dp"
+        android:background="@drawable/bg_gradient_background">
+
+        <TextView
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            android:navigationIcon="@drawable/ic_arrow_back"
-            android:elevation="12dp"
-            app:titleTextColor="@color/white"
-            app:navigationIcon="@drawable/ic_arrow_back">
+            android:layout_height="match_parent"
+            android:layout_marginLeft="88dp"
+            style="@style/PrincipalLblTittle"/>
 
-        </android.support.v7.widget.Toolbar>
-    </android.support.v7.widget.CardView>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/top_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/rl_toolbar"
+        android:background="@color/dark_green"/>
 
 
     <android.support.v4.widget.NestedScrollView
@@ -32,7 +35,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_divider"
-        android:layout_below="@+id/cv_toolbar"
+        android:layout_below="@+id/rl_toolbar"
+        android:background="@drawable/bg_gradient_background_2"
         android:orientation="vertical">
 
         <FrameLayout
@@ -40,24 +44,36 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"/>
+
     </android.support.v4.widget.NestedScrollView>
 
-
+    <com.victorengineer.limpiamiciudad.util.LoadingView
+        android:id="@+id/loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        app:progressColor="@color/primary" />
     <View
         android:id="@+id/bottom_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_above="@id/bottom_nav_home"
         android:background="?android:attr/dividerHorizontal"/>
+
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_nav_home"
         android:layout_width="match_parent"
-        style="@style/MyBottomNavigationView"
-        android:paddingTop="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/background"
+        android:layout_height="80dp"
+        android:layout_gravity="start"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_navigation_menu"/>
+        app:itemIconTint="@drawable/selector_bottom_nav"
+        app:itemTextColor="@drawable/selector_bottom_nav"
+        android:background="@drawable/bg_gradient_background"
+        app:menu="@menu/bottom_navigation_menu" />
+
+
+
 </RelativeLayout>
 
 

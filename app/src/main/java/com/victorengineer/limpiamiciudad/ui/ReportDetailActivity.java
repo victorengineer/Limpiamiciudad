@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.victorengineer.limpiamiciudad.BaseActivity;
@@ -29,7 +30,8 @@ public class ReportDetailActivity extends BaseActivity implements BaseFragment.O
 
     private ReportDetailFragment reportDetailFragment;
     private TextView btnAprove;
-    private Toolbar toolbar;
+    private TextView toolbar;
+    private ImageView btnBack;
 
     String reportId;
     String tipoResiduo;
@@ -44,7 +46,7 @@ public class ReportDetailActivity extends BaseActivity implements BaseFragment.O
         setContentView(R.layout.activity_report_detail);
 
         toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        btnBack = findViewById(R.id.btn_back_action);
         setToolbarTitle(getString(R.string.report_detail));
         setBoldActionBartitle();
 
@@ -74,12 +76,17 @@ public class ReportDetailActivity extends BaseActivity implements BaseFragment.O
                 openAproveDialog(report);
             }
         });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     private void setToolbarTitle(String title) {
         try {
-            setTitle(title);
-            toolbar.setTitle(title);
+            toolbar.setText(title);;
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -88,12 +95,6 @@ public class ReportDetailActivity extends BaseActivity implements BaseFragment.O
     private void openAproveDialog(Report report){
         AproveReportDialog dialog = AproveReportDialog.newInstance(report.getReportId(), this);
         dialog.show(getSupportFragmentManager(), AproveReportDialog.class.getSimpleName());
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        onBackPressed();
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

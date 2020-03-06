@@ -29,9 +29,12 @@ import com.google.firebase.storage.StorageReference;
 import com.victorengineer.limpiamiciudad.R;
 import com.victorengineer.limpiamiciudad.models.Report;
 import com.victorengineer.limpiamiciudad.models.Result;
+import com.victorengineer.limpiamiciudad.util.LoadingView;
 import com.victorengineer.limpiamiciudad.util.ResultListener;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 
 public class ReportDetailFragment extends BaseFragment{
@@ -44,6 +47,7 @@ public class ReportDetailFragment extends BaseFragment{
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private LinearLayout mReportRejected;
+    private LoadingView mLoadingView;
 
     private Report report;
     private ResultListener<Fragment> resultListener;
@@ -86,6 +90,7 @@ public class ReportDetailFragment extends BaseFragment{
         this.tvFechaReportada = view.findViewById(R.id.fecha_reportada);
         this.ivReport = view.findViewById(R.id.ivImage);
         this.mReportRejected = (LinearLayout) view.findViewById(R.id.ll_report_rejected);
+        mLoadingView = view.findViewById(R.id.loading_view);
 
         //storage = FirebaseStorage.getInstance();
         //String photoName = report.getImgUri() + ".jpg";
@@ -106,10 +111,15 @@ public class ReportDetailFragment extends BaseFragment{
 
 
     private void setDataFragment(){
+        mLoadingView.setLoading(true);
+        mLoadingView.setVisibility(View.VISIBLE);
         tvTipoResiduo.setText(report.getTipoResiduo());
         tvVolumenResiduo.setText(report.getVolumenResiduo());
         tvDescripcion.setText(report.getDescripcionResiduo());
-        tvFechaReportada.setText(report.getTimestamp().toString());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d 'de' MMMM 'del' yyyy', ' hh:mm aaa", Locale.getDefault());
+        String fechaReportadaFormat = dateFormat.format(report.getTimestamp());
+        tvFechaReportada.setText(fechaReportadaFormat);
 
 
         downloadImgReport(new ReportDetailCallback() {
@@ -131,10 +141,13 @@ public class ReportDetailFragment extends BaseFragment{
             public void onComplete(@NonNull Task<Uri> task) {
                 if(task.isSuccessful())
                 {
+
                     Glide.with(getActivity())
                             .load(task.getResult())
                             .apply(RequestOptions.fitCenterTransform())
                             .into(ivReport);
+
+                    mLoadingView.setVisibility(View.GONE);
 
                     reportDetailCallback.onImgDownloadedCallback();
 

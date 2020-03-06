@@ -1,7 +1,6 @@
 package com.victorengineer.limpiamiciudad.ui;
 
 import android.Manifest;
-import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,22 +14,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -40,11 +29,9 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -70,15 +57,12 @@ import com.google.maps.internal.PolylineEncoding;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
 import com.victorengineer.limpiamiciudad.R;
-import com.victorengineer.limpiamiciudad.adapters.ReportAdapter;
-import com.victorengineer.limpiamiciudad.adapters.UserRecyclerAdapter;
 import com.victorengineer.limpiamiciudad.models.ClusterMarker;
 import com.victorengineer.limpiamiciudad.models.PolylineData;
 import com.victorengineer.limpiamiciudad.models.Report;
 import com.victorengineer.limpiamiciudad.models.UserLocation;
 import com.victorengineer.limpiamiciudad.util.MyClusterManagerRenderer;
 import com.victorengineer.limpiamiciudad.util.SessionHandler;
-import com.victorengineer.limpiamiciudad.util.ViewWeightAnimationWrapper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -101,7 +85,6 @@ public class MapFragment extends Fragment implements
     private ArrayList<Report> mReportList = new ArrayList<>();
     private ArrayList<GeoPoint> mGeoPointList = new ArrayList<>();
     private ArrayList<UserLocation> mUserLocations = new ArrayList<>();
-    private UserRecyclerAdapter mUserRecyclerAdapter;
     private GoogleMap mGoogleMap;
     private UserLocation mUserPosition;
     private LatLngBounds mMapBoundary;
@@ -421,45 +404,44 @@ public class MapFragment extends Fragment implements
             }
             mGoogleMap.setOnInfoWindowClickListener(this);
 
-            String snippet = "";
+            if(mGeoPointList.size() > 0) {
 
-            String idUser = SessionHandler.getIdUser(getActivity());
-            if(mUserLocation.getUser().getUser_id().equals(idUser)){
-                snippet = "This is you";
-                //mGeoPointList.add(mUserLocation.getGeo_point());
-            }
+                String snippet = "";
 
-            for(GeoPoint geoPoint: mGeoPointList){
+                String idUser = SessionHandler.getIdUser(getActivity());
 
-                Log.d(TAG, "addMapMarkers: location: " + geoPoint.toString());
-                try{
+                for (GeoPoint geoPoint : mGeoPointList) {
 
-                    snippet = "Determine route to " + geoPoint.toString() + " ?";
+                    Log.d(TAG, "addMapMarkers: location: " + geoPoint.toString());
+                    try {
 
-                    int avatar = R.drawable.cartman_cop; // set the default avatar
-                    try{
-                        //avatar = Integer.parseInt(userLocation.getUser().getAvatar());
-                    }catch (NumberFormatException e){
-                        Log.d(TAG, "addMapMarkers: no avatar for " + geoPoint.toString() + ", setting default.");
+                        snippet = "Determine route to " + geoPoint.toString() + " ?";
+
+                        int avatar = R.drawable.ic_backpack; // set the default avatar
+                        try {
+                            //avatar = Integer.parseInt(userLocation.getUser().getAvatar());
+                        } catch (NumberFormatException e) {
+                            Log.d(TAG, "addMapMarkers: no avatar for " + geoPoint.toString() + ", setting default.");
+                        }
+                        ClusterMarker newClusterMarker = new ClusterMarker(
+                                new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude()),
+                                geoPoint.toString(),
+                                snippet,
+                                avatar,
+                                mUserLocation.getUser()
+                        );
+                        mClusterManager.addItem(newClusterMarker);
+                        mClusterMarkers.add(newClusterMarker);
+
+                    } catch (NullPointerException e) {
+                        Log.e(TAG, "addMapMarkers: NullPointerException: " + e.getMessage());
                     }
-                    ClusterMarker newClusterMarker = new ClusterMarker(
-                            new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude()),
-                            geoPoint.toString(),
-                            snippet,
-                            avatar,
-                            mUserLocation.getUser()
-                    );
-                    mClusterManager.addItem(newClusterMarker);
-                    mClusterMarkers.add(newClusterMarker);
 
-                }catch (NullPointerException e){
-                    Log.e(TAG, "addMapMarkers: NullPointerException: " + e.getMessage() );
                 }
+                mClusterManager.cluster();
 
+                setCameraView();
             }
-            mClusterManager.cluster();
-
-            setCameraView();
         }
     }
 

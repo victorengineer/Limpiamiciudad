@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_modal">
 
     <LinearLayout
         android:id="@+id/content_fragment"
@@ -25,7 +26,8 @@
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue2"/>
 
             <ImageView
                 android:id="@+id/image"
@@ -39,7 +41,8 @@
                 android:id="@+id/description"
                 android:scrollbars="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/Black"/>
 
             <FrameLayout
                 android:id="@+id/fragment_container"
@@ -60,22 +63,26 @@
 
             <Button
                 android:id="@+id/negative_button"
-                style="@style/CustomNegativeButton"
+                android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:textSize="14sp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_btn_cancel"
+                android:textColor="@color/blue2"/>
 
 
             <Button
                 android:id="@+id/positive_button"
-                style="@style/CustomPositiveButton"
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textSize="14sp"
                 android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/bg_gradient_background"
+                android:textColor="@color/blue2"/>
 
         </LinearLayout>
 

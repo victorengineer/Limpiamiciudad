@@ -13,9 +13,12 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Helpers {
 
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
+    private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static boolean checkPermission(final Context context)
@@ -48,6 +51,20 @@ public class Helpers {
         } else {
             return true;
         }
+    }
+
+    public static int generateViewId() {
+        int result;
+        int newValue;
+        do {
+            result = sNextGeneratedId.get();
+            newValue = result + 1;
+            if (newValue > 16777215) {
+                newValue = 1;
+            }
+        } while(!sNextGeneratedId.compareAndSet(result, newValue));
+
+        return result;
     }
 
     public static void hideKeyboard(View view)

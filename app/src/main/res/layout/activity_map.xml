@@ -24,15 +24,18 @@
             android:layout_height="1dp"
             android:layout_above="@id/bottom_nav_home"
             android:background="?android:attr/dividerHorizontal"/>
+
         <android.support.design.widget.BottomNavigationView
             android:id="@+id/bottom_nav_home"
             android:layout_width="match_parent"
-            style="@style/MyBottomNavigationView"
-            android:paddingTop="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/background"
+            android:layout_height="80dp"
+            android:layout_gravity="start"
             android:layout_alignParentBottom="true"
-            app:menu="@menu/bottom_navigation_menu"/>
+            app:itemIconTint="@drawable/selector_bottom_nav"
+            app:itemTextColor="@drawable/selector_bottom_nav"
+            android:background="@drawable/bg_gradient_background"
+            app:menu="@menu/bottom_navigation_menu" />
+
     </RelativeLayout>
 
 

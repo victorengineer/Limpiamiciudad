@@ -2,7 +2,6 @@ package com.victorengineer.limpiamiciudad.ui;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -10,14 +9,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
@@ -48,10 +45,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -60,14 +55,12 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.victorengineer.limpiamiciudad.R;
 import com.victorengineer.limpiamiciudad.UserClient;
-import com.victorengineer.limpiamiciudad.models.ChatMessage;
 import com.victorengineer.limpiamiciudad.models.Report;
 import com.victorengineer.limpiamiciudad.models.TipoResiduo;
 import com.victorengineer.limpiamiciudad.models.User;
 import com.victorengineer.limpiamiciudad.models.UserLocation;
 import com.victorengineer.limpiamiciudad.models.VolumenResiduo;
 import com.victorengineer.limpiamiciudad.util.Helpers;
-import com.victorengineer.limpiamiciudad.util.LocationService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -75,9 +68,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 
@@ -624,7 +615,7 @@ public class ReportFragment extends BaseFragment implements View.OnClickListener
                 "Cancelar" };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Add Photo!");
+        builder.setTitle("Agrega una foto:");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
@@ -636,7 +627,7 @@ public class ReportFragment extends BaseFragment implements View.OnClickListener
                         cameraIntent();
 
                 } else if (items[item].equals("Elegir una foto de galeria")) {
-                    userChoosenTask ="Elegir una foto de galeria";
+                    userChoosenTask ="Elegir una foto de galería";
                     if(result)
                         galleryIntent();
 

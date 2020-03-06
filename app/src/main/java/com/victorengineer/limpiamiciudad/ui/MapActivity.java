@@ -63,9 +63,6 @@ public class MapActivity extends BaseActivity implements  BottomNavigationView.O
         if (id == R.id.menu_home) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
-        } else if (id == R.id.menu_map) {
-            startActivity(new Intent(this, MapActivity.class));
-            finish();
         } else if (id == R.id.menu_profile) {
             startActivity(new Intent(this, ProfileActivity.class));
             finish();

@@ -21,6 +21,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -41,6 +42,7 @@ import com.victorengineer.limpiamiciudad.UserClient;
 import com.victorengineer.limpiamiciudad.models.Report;
 import com.victorengineer.limpiamiciudad.models.User;
 import com.victorengineer.limpiamiciudad.models.UserLocation;
+import com.victorengineer.limpiamiciudad.util.LoadingView;
 import com.victorengineer.limpiamiciudad.util.SessionHandler;
 
 import static com.victorengineer.limpiamiciudad.Constants.ERROR_DIALOG_REQUEST;
@@ -57,7 +59,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnChangeL
 
     //widgets
     private BottomNavigationView bottomNavigationView;
-    private Toolbar toolbar;
+    private TextView toolbar;
 
     //vars
     private FirebaseFirestore mDb;
@@ -66,6 +68,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnChangeL
     private FusedLocationProviderClient mFusedLocationClient;
     private UserLocation mUserLocation;
     private User user;
+    private LoadingView mLoadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +76,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnChangeL
         setContentView(R.layout.activity_main);
 
         toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
+        mLoadingView = findViewById(R.id.loading_view);
 
         mDb = FirebaseFirestore.getInstance();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -87,7 +89,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnChangeL
     private void init(){
         bottomNavigationView = findViewById(R.id.bottom_nav_home);
         setBottomNavView();
-
+        mLoadingView.setLoading(true);
+        mLoadingView.setVisibility(View.VISIBLE);
         String idUser = SessionHandler.getIdUser(getApplicationContext());
         DocumentReference userRef = mDb.collection(getString(R.string.collection_users))
                 .document(idUser);
@@ -98,16 +101,20 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnChangeL
                 if(task.isSuccessful()){
                     user = task.getResult().toObject(User.class);
                     if(user.getUser_type() == 1) {
+                        mLoadingView.setVisibility(View.GONE);
                         setToolbarTitle(getString(R.string.report));
                         setBoldActionBartitle();
                         reportFragment = ReportFragment.newInstance(getApplicationContext());
                         addOrReplaceFragment(reportFragment, R.id.fragment_container);
                     }else {
+                        mLoadingView.setVisibility(View.GONE);
                         setToolbarTitle(getString(R.string.report_list));
                         setBoldActionBartitle();
                         inflateFragmentComplaints();
                     }
 
+                }else{
+                    Log.w(TAG, "Fail get user");
                 }
             }
         });
@@ -115,8 +122,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnChangeL
 
     private void setToolbarTitle(String title) {
         try {
-            setTitle(title);
-            toolbar.setTitle(title);
+            toolbar.setText(title);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -318,14 +324,10 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnChangeL
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         int id = menuItem.getItemId();
 
-        if (id == R.id.menu_home) {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-        } else if (id == R.id.menu_map) {
+        if (id == R.id.menu_map) {
             if(checkMapServices()){
                 getLocationPermission();
             }
-
 
         } else if (id == R.id.menu_profile) {
             startActivity(new Intent(this, ProfileActivity.class));

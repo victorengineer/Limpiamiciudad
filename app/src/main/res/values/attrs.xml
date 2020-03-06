@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="LoadingView"><attr format="color" name="progressColor"/><attr format="color" name="progressBackgroundColor"/><attr format="boolean" name="isProgressLoading"/></declare-styleable>
+
+</resources>

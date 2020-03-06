@@ -32,6 +32,14 @@
     <color name="azul_fuerte">#344075</color>
     <color name="verde_oscuro">#2600ac68</color>
     <color name="secondaryText">#727272</color>
+    <color name="color_invisible">#00ffffff</color>
+    <color name="toolbar_color">#FF27A50F</color>
+    <color name="background_gray">#c9c9c9</color>
+    <color name="primary">#00A651</color>
+    <color name="item_pressed">#0033cc</color>
+    <color name="item_unpressed">#FF006929</color>
+    <color name="dark_green">#FF006929</color>
+
 
 
 </resources>

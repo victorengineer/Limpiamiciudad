@@ -4,7 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/item_unpressed</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -12,6 +12,7 @@
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
         <item name="android:textStyle">bold</item>
     </style>
+
 
     <style name="ActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
         <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
@@ -31,6 +32,14 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="PrincipalLblTittle">
+        <item name="android:textColor">@color/blue2</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -53,19 +62,18 @@
         <item name="android:textSize">10sp</item>
         <item name="android:textStyle">bold</item>
     </style>
-    <style name="CustomNegativeButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+    <style name="CustomNegativeButton" parent="Widget.MaterialComponents.Button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/border_button_background</item>
-        <item name="android:textColor">@drawable/custom_stroke_color</item>
-        <item name="strokeColor">@drawable/custom_stroke_color</item>
+        <item name="backgroundTint">@drawable/bg_btn_secondary</item>
+        <item name="android:textColor">@color/blue2</item>
     </style>
 
     <style name="CustomPositiveButton" parent="Widget.MaterialComponents.Button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="backgroundTint">@drawable/custom_stroke_color</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@drawable/bg_btn_primary</item>
+        <item name="android:textColor">@color/blue2</item>
     </style>
 
     <style name="SecondaryTextViewMedium">

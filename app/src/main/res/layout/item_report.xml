@@ -4,9 +4,7 @@
     android:id="@+id/cv_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:card_view="http://schemas.android.com/tools"
-    android:elevation="0dp"
-    app:cardElevation="0dp"
+    app:cardElevation="2dp"
     android:foreground="?android:attr/selectableItemBackground"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
@@ -40,7 +38,7 @@
                     android:text="Area llena de bolsas y plasticos tirados"
                     android:maxLines="1"
                     android:textSize="14sp"
-                    android:textColor="@color/DarkGrey" />
+                    android:textColor="@color/blue2" />
 
             </LinearLayout>
 
@@ -61,13 +59,15 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/tv_tipo_residuo" />
+                        android:text="@string/tv_tipo_residuo"
+                        android:textColor="@color/blue2"/>
 
                     <TextView
                         android:id="@+id/tipo_residuo_answer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="---------"
+                        android:textColor="@color/Black"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -81,7 +81,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/tv_volumen_residuo" />
+                        android:text="@string/tv_volumen_residuo"
+                        android:textColor="@color/blue2"/>
 
                     <TextView
                         android:id="@+id/volumen_residuo_answer"
@@ -89,6 +90,7 @@
                         android:layout_height="wrap_content"
                         android:text="----------------------"
                         android:textSize="14sp"
+                        android:textColor="@color/Black"
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
