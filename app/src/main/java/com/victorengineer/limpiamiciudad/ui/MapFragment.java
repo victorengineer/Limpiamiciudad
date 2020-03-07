@@ -83,7 +83,6 @@ public class MapFragment extends Fragment implements
 
     //vars
     private ArrayList<Report> mReportList = new ArrayList<>();
-    private ArrayList<GeoPoint> mGeoPointList = new ArrayList<>();
     private ArrayList<UserLocation> mUserLocations = new ArrayList<>();
     private GoogleMap mGoogleMap;
     private UserLocation mUserPosition;
@@ -122,15 +121,6 @@ public class MapFragment extends Fragment implements
         readDataReports(new MapFragment.ReportListCallback() {
             @Override
             public void onReportListCallback(List<Report> reportList) {
-                for(Report report : reportList){
-                    GeoPoint geoPoint = new GeoPoint(
-                            report.getGeo_point().getLatitude(),
-                            report.getGeo_point().getLongitude()
-                    );
-
-                    mGeoPointList.add(geoPoint);
-
-                }
 
                 getUserLocation(new MapFragment.UserLocationCallback() {
                     @Override
@@ -305,7 +295,7 @@ public class MapFragment extends Fragment implements
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(latLng);
-                markerOptions.title("Current Position");
+                markerOptions.title("Posición Actual");
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
                 mCurrLocationMarker = mGoogleMap.addMarker(markerOptions);
 
@@ -314,6 +304,8 @@ public class MapFragment extends Fragment implements
             }
         }
     };
+
+
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private void checkLocationPermission() {
@@ -404,28 +396,40 @@ public class MapFragment extends Fragment implements
             }
             mGoogleMap.setOnInfoWindowClickListener(this);
 
-            if(mGeoPointList.size() > 0) {
+            if(mReportList.size() > 0) {
 
                 String snippet = "";
 
                 String idUser = SessionHandler.getIdUser(getActivity());
 
-                for (GeoPoint geoPoint : mGeoPointList) {
+                for (Report report : mReportList) {
 
-                    Log.d(TAG, "addMapMarkers: location: " + geoPoint.toString());
+                    Log.d(TAG, "addMapMarkers: location: " + report.getGeo_point().toString());
                     try {
 
-                        snippet = "Determine route to " + geoPoint.toString() + " ?";
+                        snippet = "¿Quieres determinar una ruta?";
 
                         int avatar = R.drawable.ic_backpack; // set the default avatar
                         try {
                             //avatar = Integer.parseInt(userLocation.getUser().getAvatar());
                         } catch (NumberFormatException e) {
-                            Log.d(TAG, "addMapMarkers: no avatar for " + geoPoint.toString() + ", setting default.");
+                            Log.d(TAG, "addMapMarkers: no avatar for " + report.getGeo_point().toString() + ", setting default.");
+                        }
+
+                        if(report.getVolumenResiduo().equals("Cabe en una Mano")){
+                            avatar = R.drawable.ic_detener;
+                        }else if(report.getVolumenResiduo().equals("Cabe en un Automóvil")){
+                            avatar = R.drawable.ic_car;
+                        }else if(report.getVolumenResiduo().equals("Cabe en un Contenedor")){
+                            avatar = R.drawable.ic_shopping_basket;
+                        }else if(report.getVolumenResiduo().equals("Cabe en un Camión")){
+                            avatar = R.drawable.ic_truck;
+                        }else if(report.getVolumenResiduo().equals("Cabe en una Mochila")){
+                            avatar = R.drawable.ic_backpack;
                         }
                         ClusterMarker newClusterMarker = new ClusterMarker(
-                                new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude()),
-                                geoPoint.toString(),
+                                new LatLng(report.getGeo_point().getLatitude(), report.getGeo_point().getLongitude()),
+                                "Area contaminada",
                                 snippet,
                                 avatar,
                                 mUserLocation.getUser()
@@ -484,20 +488,19 @@ public class MapFragment extends Fragment implements
     }
 
     private void setReportsPositions() {
-        for (GeoPoint geoPoint : mGeoPointList) {
-            if (mUserLocation.getUser().getUser_id().equals(FirebaseAuth.getInstance().getUid())) {
-                mUserPosition = mUserLocation;
-            }
+        if (mUserLocation.getUser().getUser_id().equals(FirebaseAuth.getInstance().getUid())) {
+            mUserPosition = mUserLocation;
         }
     }
 
     @Override
     public void onInfoWindowClick(final Marker marker) {
-        if(marker.getTitle().contains("Trip #")){
+        if(marker.getTitle().contains("Viaje #")){
             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("¿Quieres abrir google maps?")
+            builder.setTitle("Lugar contaminado")
+                    .setMessage("¿Quieres abrir google maps?")
                     .setCancelable(true)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                             String latitude = String.valueOf(marker.getPosition().latitude);
@@ -532,7 +535,7 @@ public class MapFragment extends Fragment implements
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(marker.getSnippet())
                         .setCancelable(true)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                             public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                                 resetSelectedMarker();
                                 mSelectedMarker = marker;
@@ -688,8 +691,8 @@ public class MapFragment extends Fragment implements
 
                 Marker marker = mGoogleMap.addMarker(new MarkerOptions()
                         .position(endLocation)
-                        .title("Trip #" + index)
-                        .snippet("Duration: " + polylineData.getLeg().duration
+                        .title("Viaje #" + index)
+                        .snippet("Duración: " + polylineData.getLeg().duration
                         ));
 
                 mTripMarkers.add(marker);
